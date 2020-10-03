@@ -26,7 +26,9 @@ dependencies:
 
   dio: ^3.0.10
   google_fonts: ^1.1.0
-
+  get: ^3.12.1
+  supercharged: ^1.10.0
+  flutter_bloc: ^6.0.5
 dev_dependencies:
   flutter_test:
     sdk: flutter

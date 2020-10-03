@@ -1,20 +1,85 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pcpartpicker/api/api.dart';
+import 'package:pcpartpicker/bloc/apiBloc/api_bloc.dart';
+import 'package:pcpartpicker/components/components.dart';
 import 'package:pcpartpicker/entities/guides.dart';
+
+import 'guideDetails.dart';
 
 class BuildGuidesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          CustomBuildGuideBar(),
-          Expanded(child: BuildsWidget()),
-        ],
-      ),
-    );
+        body: Column(children: [
+      CustomBuildGuideBar(),
+      Expanded(child: BuildsWidget())
+    ]));
+  }
+}
+
+class BuildsWidget extends StatelessWidget {
+  Widget categoryWidget(Categories categories) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Padding(
+          padding: EdgeInsets.only(left: 20),
+          child: Text(categories.title,
+              style: GoogleFonts.montserrat(
+                  fontWeight: FontWeight.w500, fontSize: 18),
+              textAlign: TextAlign.start)),
+      ...categories.guides.map((e) {
+        return InkWell(
+          splashColor: Colors.orangeAccent,
+          child: Card(
+              child: ListTile(
+                  title: Text(e.title, style: GoogleFonts.rubik(fontSize: 16)),
+                  dense: true,
+                  subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ...e.products
+                            .map<Widget>((c) => Text(
+                                  c,
+                                  style: TextStyle(fontSize: 12),
+                                ))
+                            .toList(),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              FlatButton.icon(
+                                  onPressed: null,
+                                  icon: Icon(Icons.monetization_on),
+                                  label: Text(e.price)),
+                              FlatButton.icon(
+                                  onPressed: null,
+                                  icon: Icon(Icons.comment),
+                                  label: Text(e.comments.toString()))
+                            ])
+                      ]))),
+          onTap: () {
+            Get.to(GuideDetailsPage(path: e.path));
+          },
+        );
+      })
+    ]);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ApiBloc, ApiState>(builder: (context, state) {
+      if (state is ApiFetching) {
+        return loading();
+      } else if (state is ApiFetchedError) {
+        return apiError(state.dioError);
+      } else {
+        ApiFetched _apiFetched = state as ApiFetched;
+        return ListView(
+            physics: BouncingScrollPhysics(),
+            children: _apiFetched.buildGuides.categories
+                .map<Widget>((e) => categoryWidget(e))
+                .toList());
+      }
+    });
   }
 }
 
@@ -43,73 +108,7 @@ class CustomBuildGuideBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 40, left: 20),
-      child: Row(children: [titleWidget()]),
-    );
-  }
-}
-
-class BuildsWidget extends StatelessWidget {
-  Widget categoryWidget(Categories categories, BuildContext context) {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.all(20),
-            child: Text(
-              categories.title,
-              style: GoogleFonts.montserrat(fontWeight: FontWeight.w500, fontSize: 18),
-              textAlign: TextAlign.start,
-            ),
-          ),
-          ...categories.guides.map((e) {
-            return InkWell(
-              child: Card(
-                child: ListTile(
-                  title: Text(e.title, style: GoogleFonts.rubik(fontSize: 16),),
-                  dense: true,
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ...e.products.map<Widget>((c) => Text(c, style: TextStyle(fontSize: 12),)).toList(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          FlatButton.icon(onPressed: null, icon: Icon(Icons.monetization_on), label: Text(e.price)),
-                          FlatButton.icon(onPressed: null, icon: Icon(Icons.comment), label: Text(e.comments.toString()))
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ))
-              },
-            );
-          })
-        ]);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<BuildGuides>(
-        future: getBuildGuides(),
-        builder: (BuildContext context, AsyncSnapshot<BuildGuides> snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Colors.orangeAccent),
-              ),
-            );
-          }
-
-          return ListView(
-            physics: BouncingScrollPhysics(),
-            children: snapshot.data.categories
-                .map<Widget>((e) => categoryWidget(e, context))
-                .toList(),
-          );
-        });
+        margin: EdgeInsets.only(top: 40, left: 20),
+        child: Row(children: [titleWidget()]));
   }
 }
