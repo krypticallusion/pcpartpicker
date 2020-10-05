@@ -57,14 +57,16 @@ class CustomGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      crossAxisCount: 2,
-      shrinkWrap: true,
-      children: [
-        cardWidget("SYSTEM \n BUILDER", Icons.settings, '/'),
-        cardWidget("BUILD \n GUIDES", Icons.assignment, '/buildGuide'),
-        cardWidget("COMPLETED \n BUILDS", Icons.assignment_turned_in, '/')
-      ],
+    return Expanded(
+      child: GridView.count(
+        crossAxisCount: 2,
+        shrinkWrap: true,
+        children: [
+          cardWidget("SYSTEM \n BUILDER", Icons.settings, '/'),
+          cardWidget("BUILD \n GUIDES", Icons.assignment, '/buildGuide'),
+          cardWidget("COMPLETED \n BUILDS", Icons.assignment_turned_in, '/')
+        ],
+      ),
     );
   }
 }
