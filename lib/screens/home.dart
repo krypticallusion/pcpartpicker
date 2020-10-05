@@ -2,7 +2,6 @@ import "package:flutter/material.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pcpartpicker/bloc/apiBloc/api_bloc.dart';
 import 'package:pcpartpicker/components/customAppBar.dart';
 import 'package:pcpartpicker/theme/theme.dart';
 import 'buildGuides.dart';
@@ -10,7 +9,6 @@ import 'buildGuides.dart';
 class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
-        onInit: () => BlocProvider.of<ApiBloc>(context).add(FetchBuildGuides()),
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         home: PcPartsHome(),

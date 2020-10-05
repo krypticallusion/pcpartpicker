@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 Widget apiError(DioError err) {
   var message;
-  DioError _apiFetchedError = err;
-  switch (_apiFetchedError.type) {
+
+  switch (err.type) {
     case DioErrorType.DEFAULT:
       message =
           'Failed to connect to host,Please check your internet Connection';
