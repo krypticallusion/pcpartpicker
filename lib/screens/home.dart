@@ -3,16 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pcpartpicker/bloc/apiBloc/api_bloc.dart';
+import 'package:pcpartpicker/components/customAppBar.dart';
 import 'package:pcpartpicker/theme/theme.dart';
-
 import 'buildGuides.dart';
 
 class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
         onInit: () => BlocProvider.of<ApiBloc>(context).add(FetchBuildGuides()),
-        theme: customThemeData,
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
         home: PcPartsHome(),
+        debugShowCheckedModeBanner: false,
         title: 'PcPartsPicker',
         enableLog: true,
         initialRoute: '/',
@@ -66,26 +68,5 @@ class CustomGrid extends StatelessWidget {
         cardWidget("COMPLETED \n BUILDS", Icons.assignment_turned_in, '/')
       ],
     );
-  }
-}
-
-class CustomAppBar extends StatelessWidget {
-  Widget titleWidget() {
-    return RichText(
-        text: TextSpan(
-            style: GoogleFonts.oswald(
-                fontWeight: FontWeight.bold, fontSize: 27, color: Colors.black),
-            children: [
-          TextSpan(text: "PC"),
-          TextSpan(text: "PART", style: TextStyle(color: Colors.orangeAccent)),
-          TextSpan(text: "PICKER")
-        ]));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        margin: EdgeInsets.only(top: 40, left: 20),
-        child: Row(children: [titleWidget()]));
   }
 }
