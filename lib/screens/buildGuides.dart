@@ -84,11 +84,13 @@ class BuildsWidget extends StatelessWidget {
 }
 
 class CustomBuildGuideBar extends StatelessWidget {
-  Widget titleWidget() {
+  Widget titleWidget(context) {
     return RichText(
       text: TextSpan(
           style: GoogleFonts.oswald(
-              fontWeight: FontWeight.bold, fontSize: 27, color: Colors.black),
+              fontWeight: FontWeight.bold,
+              fontSize: 27,
+              color: Theme.of(context).textTheme.headline6.color),
           children: [
             TextSpan(text: "PC"),
             TextSpan(
@@ -109,6 +111,6 @@ class CustomBuildGuideBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         margin: EdgeInsets.only(top: 40, left: 20),
-        child: Row(children: [titleWidget()]));
+        child: Row(children: [titleWidget(context)]));
   }
 }
