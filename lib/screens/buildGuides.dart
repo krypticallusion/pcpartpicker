@@ -1,11 +1,13 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pcpartpicker/bloc/apiBloc/api_bloc.dart';
 import 'package:pcpartpicker/components/components.dart';
+import 'package:pcpartpicker/controllers/apicontroller.dart';
 import 'package:pcpartpicker/entities/guides.dart';
 
+import '../entities/guides.dart';
 import 'guideDetails.dart';
 
 class BuildGuidesPage extends StatelessWidget {
@@ -64,20 +66,26 @@ class BuildsWidget extends StatelessWidget {
     ]);
   }
 
+  final APIService apiService = Get.find();
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ApiBloc, ApiState>(builder: (context, state) {
-      if (state is ApiFetching) {
-        return loading();
-      } else if (state is ApiFetchedError) {
-        return apiError(state.dioError);
+    return Obx(() {
+      if (apiService.guideDetails() == null) {
+        return Center(child: CircularProgressIndicator());
       } else {
-        ApiFetched _apiFetched = state as ApiFetched;
-        return ListView(
-            physics: BouncingScrollPhysics(),
-            children: _apiFetched.buildGuides.categories
-                .map<Widget>((e) => categoryWidget(e))
-                .toList());
+        if (apiService.guideDetails()?.error ?? false)
+          return apiError(apiService.guideDetails().error);
+        else {
+          return ListView(
+              physics: BouncingScrollPhysics(),
+              children: apiService
+                  .guideDetails()
+                  .buildGuides
+                  .categories
+                  .map<Widget>((e) => categoryWidget(e))
+                  .toList());
+        }
       }
     });
   }
