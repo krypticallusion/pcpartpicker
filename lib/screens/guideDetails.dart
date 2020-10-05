@@ -113,9 +113,11 @@ class CustomDetailBar extends StatelessWidget {
     return RichText(
       text: TextSpan(
           style: GoogleFonts.oswald(
-              fontWeight: FontWeight.bold, fontSize: 27, color: Colors.black),
+              fontWeight: FontWeight.bold,
+              fontSize: 27,
+              color: Get.textTheme.headline6.color),
           children: [
-            TextSpan(text: "GUIDE", style: TextStyle(color: Colors.black)),
+            TextSpan(text: "GUIDE"),
             TextSpan(
               text: "DETAILS",
               style: TextStyle(color: Colors.orangeAccent),
