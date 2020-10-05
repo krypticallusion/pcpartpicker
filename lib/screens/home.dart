@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pcpartpicker/components/customAppBar.dart';
@@ -58,15 +59,45 @@ class CustomGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: GridView.count(
+      child: AnimationLimiter(
+          child: GridView.count(
         crossAxisCount: 2,
         shrinkWrap: true,
         children: [
-          cardWidget("SYSTEM \n BUILDER", Icons.settings, '/'),
-          cardWidget("BUILD \n GUIDES", Icons.assignment, '/buildGuide'),
-          cardWidget("COMPLETED \n BUILDS", Icons.assignment_turned_in, '/')
+          AnimationConfiguration.staggeredGrid(
+            position: 0,
+            duration: const Duration(milliseconds: 375),
+            columnCount: 3,
+            child: ScaleAnimation(
+              child: FadeInAnimation(
+                child: cardWidget("SYSTEM \n BUILDER", Icons.settings, '/'),
+              ),
+            ),
+          ),
+          AnimationConfiguration.staggeredGrid(
+            position: 1,
+            duration: const Duration(milliseconds: 375),
+            columnCount: 3,
+            child: ScaleAnimation(
+              child: FadeInAnimation(
+                child: cardWidget(
+                    "BUILD \n GUIDES", Icons.assignment, '/buildGuide'),
+              ),
+            ),
+          ),
+          AnimationConfiguration.staggeredGrid(
+            position: 2,
+            duration: const Duration(milliseconds: 375),
+            columnCount: 3,
+            child: ScaleAnimation(
+              child: FadeInAnimation(
+                child: cardWidget(
+                    "COMPLETED \n BUILDS", Icons.assignment_turned_in, '/'),
+              ),
+            ),
+          ),
         ],
-      ),
+      )),
     );
   }
 }
